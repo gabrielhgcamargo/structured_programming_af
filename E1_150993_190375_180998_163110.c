@@ -1,4 +1,5 @@
 /*
+GRUPO 1:
 Enrico Pezato Acquaviva Carrano 150993
 Gabriel Henrique Garcia Camargo - 190375
 Marcelo Zaguette Junior - 180998
@@ -24,17 +25,17 @@ typedef struct infocarro {
 
 typedef union dadoscarro { 
  char sigla; 
- struct infocarro reservado; 
+ infocarro reservado; 
 }dadoscarro; 
 
 typedef struct loja { 
  int regloja; //gerar autom�tico 
  char nome[30]; 
  char CNPJ[19]; 
- struct endereco end; 
+ endereco end; 
  int sold; 
  int reserved; 
- union  dadoscarro  tabela[3]; 
+ dadoscarro  tabela[3]; 
 }loja; 
 
 typedef struct infoloja { 
@@ -44,7 +45,7 @@ typedef struct infoloja {
 
 typedef union dadosloja { 
  char sigla; 
- struct infoloja reserva; 
+ infoloja reserva; 
 }dadosloja; 
 
 typedef struct montadora { 
@@ -52,9 +53,12 @@ typedef struct montadora {
  char modelo[20]; 
  char cor[10]; 
  float  valor; 
- union dadosloja status; 
+ dadosloja status; 
 }montadora;
 
+//Menu
+int printMenu(int *ptrTamLoja);
+//Alocacao Dinamica
 void alocaEndereco(endereco **p, int tam);
 void alocaInfoCarro(infocarro **p, int tam);
 void alocaDadosCarro(dadoscarro **p, int tam);
@@ -62,27 +66,75 @@ void alocaLoja(loja **p, int tam);
 void alocaInfoLoja(infoloja **p, int tam);
 void alocaDadosLoja(dadosloja **p, int tam);
 void alocaMontadora(montadora **p, int tam);
+//Cadastros
+void cadastrarLoja(loja *ptrLoja);
 
 int main(){
 	endereco *ptrEndereco=NULL;
+	int *ptrTamEndereco = NULL;
+	*ptrTamEndereco = 0;
+
 	infocarro *ptrInfoCarro=NULL;
-	dadoscarro *ptrDadosCarro=NULL;
-	loja *ptrLoja=NULL;
-	infoloja *ptrInfoLoja=NULL;
-	dadosloja *ptrDadosLoja=NULL;
-	montadora *ptrMontadora=NULL;
+	int *ptrTamInfoCarro = NULL;
+	*ptrTamInfoCarro = 0;
 	
+	dadoscarro *ptrDadosCarro=NULL;
+	int *ptrTamDadosCarro = NULL;
+	*ptrTamDadosCarro = 0;
+
+	loja *ptrLoja=NULL;
+	int *ptrTamLoja = NULL;
+	*ptrTamLoja = 0;
+
+	infoloja *ptrInfoLoja=NULL;
+	int *ptrTamInfoLoja = NULL;
+	*ptrTamInfoLoja = 0;
+
+	dadosloja *ptrDadosLoja=NULL;
+	int *ptrTamDadosLoja = NULL;
+	*ptrTamDadosLoja = 0;
+
+	montadora *ptrMontadora=NULL;
+	int *ptrTamMontadora = NULL;
+	*ptrTamMontadora = 0;
+
+	char menuStop = 's';
+	int menuAux = 0;
+	
+	do{
+		menuAux = printMenu(ptrTamLoja);
+		switch (menuAux)
+		{
+		case 1:
+			*ptrTamLoja++;
+			alocaLoja(&ptrLoja, *ptrTamLoja);
+			printf("case 1 - cadastro de concessionaria");
+		case 2:
+			printf("case 2");
+		}
+	}while(menuStop!='s' || menuStop != 'S');
 	int tam = 1;
-	alocaEndereco(&ptrEndereco, tam);
-	alocaInfoCarro(&ptrInfoCarro, tam);
-	alocaDadosCarro(&ptrDadosCarro, tam);
-	alocaLoja(&ptrLoja, tam);
-	alocaInfoLoja(&ptrInfoLoja, tam);
-	alocaDadosLoja(&ptrDadosLoja, tam);
-	alocaMontadora(&ptrMontadora, tam);
+	alocaEndereco(&ptrEndereco, *ptrTamEndereco);
+	alocaInfoCarro(&ptrInfoCarro, *ptrTamInfoCarro);
+	alocaDadosCarro(&ptrDadosCarro, *ptrTamDadosCarro);
+	alocaLoja(&ptrLoja, *ptrTamLoja);
+	alocaInfoLoja(&ptrInfoLoja, *ptrTamInfoLoja);
+	alocaDadosLoja(&ptrDadosLoja, *ptrTamDadosLoja);
+	alocaMontadora(&ptrMontadora, *ptrTamMontadora);
 	printf("Hello World\n");
 	system("pause");
 	return 0;
+}
+
+int printMenu(int *ptrTamLoja){
+	int aux=0;
+	do{
+		printf("\tMenu:\n");
+		printf("\t1- Cadastro de Concessionaria (atual = %d | max = 5)",*ptrTamLoja);
+		printf("\t2- Consulta de Concessionaria");
+		scanf("%i",&aux);
+	}while(aux != 1 || aux!= 2);
+	return aux;
 }
 
 void alocaEndereco(endereco **p, int tam){
