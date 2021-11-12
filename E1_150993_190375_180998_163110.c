@@ -59,6 +59,7 @@ typedef struct montadora {
 //Menu
 int printMenu(int *ptrTamLoja);
 //Alocacao Dinamica
+void alocaInt(int **p, int tam);
 void alocaEndereco(endereco **p, int tam);
 void alocaInfoCarro(infocarro **p, int tam);
 void alocaDadosCarro(dadoscarro **p, int tam);
@@ -70,59 +71,72 @@ void alocaMontadora(montadora **p, int tam);
 void cadastrarLoja(loja *ptrLoja);
 
 int main(){
+	
 	endereco *ptrEndereco=NULL;
 	int *ptrTamEndereco = NULL;
+	alocaInt(&ptrTamEndereco,1);
 	*ptrTamEndereco = 0;
 
 	infocarro *ptrInfoCarro=NULL;
 	int *ptrTamInfoCarro = NULL;
+	alocaInt(&ptrTamInfoCarro,1);
 	*ptrTamInfoCarro = 0;
 	
 	dadoscarro *ptrDadosCarro=NULL;
 	int *ptrTamDadosCarro = NULL;
+	alocaInt(&ptrTamDadosCarro,1);
 	*ptrTamDadosCarro = 0;
 
 	loja *ptrLoja=NULL;
-	int *ptrTamLoja = NULL;
-	*ptrTamLoja = 0;
-
+	int *ptrTamLoja=NULL;
+	alocaInt(&ptrTamLoja,1);
+	*ptrTamLoja= 0;
+	
 	infoloja *ptrInfoLoja=NULL;
 	int *ptrTamInfoLoja = NULL;
+	alocaInt(&ptrTamInfoLoja,1);
 	*ptrTamInfoLoja = 0;
 
 	dadosloja *ptrDadosLoja=NULL;
 	int *ptrTamDadosLoja = NULL;
+	alocaInt(&ptrTamDadosLoja,1);
 	*ptrTamDadosLoja = 0;
 
 	montadora *ptrMontadora=NULL;
 	int *ptrTamMontadora = NULL;
+	alocaInt(&ptrTamMontadora,1);
 	*ptrTamMontadora = 0;
-
+	
 	char menuStop = 's';
 	int menuAux = 0;
 	
 	do{
 		menuAux = printMenu(ptrTamLoja);
-		switch (menuAux)
+		printf("\nValor menuAux = %i\n",menuAux);
+		switch(menuAux)
 		{
 		case 1:
-			*ptrTamLoja++;
+			*(ptrTamLoja) = *(ptrTamLoja) + 1;
 			alocaLoja(&ptrLoja, *ptrTamLoja);
-			printf("case 1 - cadastro de concessionaria");
+			printf("case 1 - cadastro de concessionaria\n");
+			break;
 		case 2:
-			printf("case 2");
+			printf("\nEntrou no case 2\n");
+			printf("\ncase 2\n");
+			break;
 		}
-	}while(menuStop!='s' || menuStop != 'S');
-	int tam = 1;
-	alocaEndereco(&ptrEndereco, *ptrTamEndereco);
-	alocaInfoCarro(&ptrInfoCarro, *ptrTamInfoCarro);
-	alocaDadosCarro(&ptrDadosCarro, *ptrTamDadosCarro);
-	alocaLoja(&ptrLoja, *ptrTamLoja);
-	alocaInfoLoja(&ptrInfoLoja, *ptrTamInfoLoja);
-	alocaDadosLoja(&ptrDadosLoja, *ptrTamDadosLoja);
-	alocaMontadora(&ptrMontadora, *ptrTamMontadora);
-	printf("Hello World\n");
-	system("pause");
+		printf("\nDeseja parar? <s/n>\n");
+		scanf("%c",&menuStop);
+		fflush(stdin);
+	}while(menuStop!='s' && menuStop !='S');
+//	int tam = 1;
+//	alocaEndereco(&ptrEndereco, *ptrTamEndereco);
+//	alocaInfoCarro(&ptrInfoCarro, *ptrTamInfoCarro);
+//	alocaDadosCarro(&ptrDadosCarro, *ptrTamDadosCarro);
+//	alocaLoja(&ptrLoja, *ptrTamLoja);
+//	alocaInfoLoja(&ptrInfoLoja, *ptrTamInfoLoja);
+//	alocaDadosLoja(&ptrDadosLoja, *ptrTamDadosLoja);
+//	alocaMontadora(&ptrMontadora, *ptrTamMontadora);
 	return 0;
 }
 
@@ -131,10 +145,23 @@ int printMenu(int *ptrTamLoja){
 	do{
 		printf("\tMenu:\n");
 		printf("\t1- Cadastro de Concessionaria (atual = %d | max = 5)",*ptrTamLoja);
+		printf("\n");
 		printf("\t2- Consulta de Concessionaria");
-		scanf("%i",&aux);
-	}while(aux != 1 || aux!= 2);
+		printf("\n");
+		scanf("\t%i",&aux);
+		fflush(stdin);
+		printf("\n");
+		printf("Valor auxiliar: %i",aux);
+		printf("\n");
+	}while(aux != 1 && aux != 2);
 	return aux;
+}
+
+void alocaInt(int **p, int tam){
+	if((*p = (int*)realloc(*p,tam*sizeof(int)))==NULL){
+		exit(1);
+	}
+	printf("\nAlocacao feita\n");
 }
 
 void alocaEndereco(endereco **p, int tam){
