@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct endereco {
+ char logradouro[80];
+ char bairro[15];
+ char CEP[10];
+ char cidade[15];
+ char estado[3];
+ char fone[12];
+ char email[40];
+}endereco;
+
+int verifica();// função que retorna quantos elementos já estão no arquivo
+void aloca(endereco **p, int tam); // exemplo alocando dinamicamente em um único espaço
+void cadastro(endereco *p, int qtde);
+void grava(endereco *p);
+void mostra(endereco *p, int qtde);
+
+main (){
+endereco *ptrEndereco = NULL; //para poder realizar a alocação.
+char op; // se deseja ou não continuar.
+int qtde; // quantos elementos serão armazenados.
+aloca(&ptrEndereco, 1);
+qtde = verifica();
+do{
+    cadastro(ptrEndereco, qtde + 1);
+    qtde++;
+    printf("\nDeseja continuar <S/N>: ");
+    scanf("%c",&op);
+    fflush(stdin);
+}while(op != 'n' && op != 'N');
+mostra(ptrEndereco, qtde);
+}
+
+void aloca(endereco **p, int tam){
+if((*p=(endereco*)realloc(*p,tam*sizeof(endereco)))==NULL)
+	exit(1);
+}// ALOCA
+
+int verifica(){
+long int cont = 0; //contador
+FILE *fptr=NULL;   //PONTEIRO PARA FILE
+if((fptr = fopen("infoendereco.bin","rb"))==NULL)
+    return cont; //arquivo não existe
+else
+{
+   fseek(fptr,0,2); //posiciona no fim
+   cont = ftell(fptr)/sizeof(endereco);//retorna a quantidade de elementos do tipo endereco armazenados no arquivo.
+   fclose(fptr); // dentro do else pois foi aberto com rb
+   return cont;
+}
+}//VERIFICA - abre o arquivo, posiciona o ponteiro do arquivo no fim, e descobre quantos bytes tem.
+//Após descobrir quantos bytes tem, é dividido qntd bytes pelo tamanho da estrutura.
+// E enfim saber quantos elementos tem JÁ registrados no arquivo.
+
+void cadastro(endereco *p, int qtde){
+
+printf("\nLogradouro: ");
+gets(p->logradouro);
+fflush(stdin);
+
+printf("\nBairro: ");
+gets(p->bairro);
+fflush(stdin);
+
+printf("\nCEP: ");
+gets(p->CEP);
+fflush(stdin);
+
+printf("\nCidade: ");
+gets(p->cidade);
+fflush(stdin);
+
+printf("\nEstado: ");
+gets(p->estado);
+fflush(stdin);
+
+printf("\nTelefone: ");
+gets(p->fone);
+fflush(stdin);
+
+printf("\nEmail: ");
+gets(p->email);
+fflush(stdin);
+grava(p);// chamada da função grava
+}//cadastro - pede ao usuario para digitar os elementos do endereco
+
+void grava(endereco *p){
+FILE *fptr = NULL;
+if((fptr = fopen("infoendereco.txt","ab"))==NULL)
+    printf("Erro ao abrir o arquivo!");
+else
+    fwrite(p,sizeof(endereco),1,fptr);
+fclose(fptr); // fora do else pq abriu com ab
+}//grava
+
+void mostra(endereco *p, int qtde){
+int i;
+FILE *fptr = NULL;
+system("cls"); // limpa tela
+if((fptr = fopen("infoendereco.txt","rb"))== NULL)
+    printf("\nErro ao abrir o arquivo!");
+else{
+    for(i = 0; i < qtde; i++ )
+    {
+        fseek(fptr,i*sizeof(endereco),0); //0 =  início!!!
+        fread(p,sizeof(endereco),1,fptr);
+        printf("\nLogradouro: %s\nBairro: %s\nCEP: %s\nCidade: %s\nEstado: %s\nTelefone: %s\nEmail: %s\n\n", p->logradouro, p->bairro, p->CEP, p->cidade, p->estado, p->fone, p->email);
+    }//for
+    fclose(fptr); // dentro do else , pois abriu com rb
+    }
+printf("\n\n\n");
+system("pause");
+}// mostra
